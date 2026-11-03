@@ -1,0 +1,14 @@
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build (none planned, but keep it clean)
+/dist/
+/build/
+node_modules/

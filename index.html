@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dekonstruktion.kode | Full-Stack / Backend Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #201d1d;
+      --fg: #fdfcfc;
+      --border: #fdfcfc;
+      --font: "Berkeley Mono", "JetBrains Mono", "Fira Code", "Space Mono", monospace;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #fdfcfc;
+        --fg: #201d1d;
+        --border: #201d1d;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: var(--font);
+      line-height: 1.5;
+      font-size: 14px;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: var(--fg);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    a:hover {
+      background-color: var(--fg);
+      color: var(--bg);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .header {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: var(--bg);
+      z-index: 1000;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 40px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+    }
+
+    .brand .prompt {
+      color: var(--fg);
+    }
+
+    .nav {
+      display: flex;
+      gap: 20px;
+      font-size: 13px;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .main {
+      margin-top: 52px;
+      padding: 24px 0;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+    }
+
+    .section-title .marker {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    .terminal-window {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background-color: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .terminal-dot {
+      width: 10px;
+      height: 10px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+    }
+
+    .terminal-body {
+      padding: 14px 16px;
+      font-size: 13px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.6;
+    }
+
+    .terminal-body a {
+      color: var(--fg);
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .terminal-body a:hover {
+      background-color: var(--fg);
+      color: var(--bg);
+      border-bottom-color: var(--bg);
+    }
+
+    .ascii-art {
+      font-size: 10px;
+      line-height: 1.25;
+      white-space: pre;
+      overflow-x: auto;
+      color: var(--fg);
+      opacity: 0.9;
+      text-shadow: 0 0 4px var(--fg);
+    }
+
+    .status-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+    }
+
+    .status-item .marker {
+      color: var(--fg);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px;
+      font-size: 12.5px;
+    }
+
+    .card-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+    }
+
+    .card-desc {
+      opacity: 0.85;
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+
+    .skill-chip {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 12px;
+      white-space: nowrap;
+      margin-right: 8px;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+
+    .skill-group {
+      margin-bottom: 14px;
+    }
+
+    .skill-group-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .expandable {
+      cursor: pointer;
+    }
+
+    .expandable-content {
+      display: none;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      margin-top: 6px;
+    }
+
+    .expandable-content.open {
+      display: block;
+    }
+
+    .expandable .marker::after {
+      content: "[+]";
+      margin-left: 6px;
+      font-size: 11px;
+      opacity: 0.8;
+    }
+
+    .expandable.open .marker::after {
+      content: "[-]";
+    }
+
+    .expandable .marker::before {
+      content: "->";
+      margin-right: 6px;
+      font-size: 11px;
+      opacity: 0.8;
+    }
+
+    .link-list {
+      list-style: none;
+    }
+
+    .link-list li {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .link-list .marker {
+      font-size: 12px;
+      opacity: 0.8;
+      min-width: 20px;
+    }
+
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 20px 0;
+      margin-top: 40px;
+      font-size: 12px;
+      opacity: 0.75;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .line {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .code-snippet {
+      font-family: var(--font);
+      font-size: 12.5px;
+      line-height: 1.6;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+      border-left: 1px solid var(--border);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--fg);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--bg);
+    }
+
+    /* Typing cursor animation for hero */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 9px;
+      height: 15px;
+      background-color: var(--fg);
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+      margin-left: 2px;
+    }
+
+    .kbd {
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .badge {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 11px;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="brand">
+        <span class="prompt">root@dekonstruktion.kode:~$</span>
+        <span> Dekonstruktion.kode</span>
+      </a>
+      <nav class="nav">
+        <a href="#about"><span class="marker">-></span>ABOUT</a>
+        <a href="#stack"><span class="marker">-></span>STACK</a>
+        <a href="#projects"><span class="marker">-></span>PROJECTS</a>
+        <a href="#contact"><span class="marker">-></span>CONTACT</a>
+        <span class="marker">|</span>
+        <a href="https://github.com/DalerFayz" target="_blank" rel="noopener noreferrer">GH</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container main">
+    <!-- Hero -->
+    <section class="section">
+      <div class="terminal-window">
+        <div class="terminal-header">
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <span style="margin-left: 8px;">bash — 80x24</span>
+        </div>
+        <div class="terminal-body code-snippet">
+<span style="opacity: 0.7;">$ whoami</span>
+Dekonstruktion.kode
+<span style="opacity: 0.7;">$ whoami -v</span>
+Full-Stack / Backend developer (CRM, automation, Telegram bots, AI-integrations)
+<span style="opacity: 0.7;">$ cat /etc/availability</span>
+Available for international freelance contracts & remote IT positions
+<span style="opacity: 0.7;">$ echo $CURRENT_PROJECT</span>
+Building scalable backends, deploying to VPS, shipping production code.
+<span style="opacity: 0.7;">$ <span class="cursor"></span></span>
+        </div>
+      </div>
+
+      <div class="terminal-window">
+        <div class="terminal-header">
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <span style="margin-left: 8px;">ascii_logo</span>
+        </div>
+        <div class="terminal-body">
+          <div class="ascii-art">
+    _   _              _             
+   / \ | |_   _  __  _| |_   _  ___  
+  / _ \| | | | |/ / | | | | | |/ _ \ 
+ / ___ \ | |_| |<__| | | |_| | (_) |
+/_/   \_\|\__,_|\___/_\_|\__,_|\___/ 
+   ___  _    _   _    _                
+  / __|| |  | | | |  | |               
+  \__ \| |__| | | |__| |               
+  |___/ \____/   \____/                
+        </div>
+        </div>
+      </div>
+
+      <div class="terminal-window">
+        <div class="terminal-header">
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <span style="margin-left: 8px;">status</span>
+        </div>
+        <div class="terminal-body code-snippet">
+<span style="opacity: 0.7;">$ system</span>
+<span class="status-row">
+  <span class="status-item"><span class="marker">-></span> role: <span class="badge">Full-Stack / Backend</span></span>
+  <span class="status-item"><span class="marker">-></span> work: <span class="badge">freelance (Kwork · Fiverr · Upwork)</span></span>
+  <span class="status-item"><span class="marker">-></span> langs: <span class="badge">RU / TJ / EN</span></span>
+  <span class="status-item"><span class="marker">-></span> base: <span class="badge">Fedora Linux</span></span>
+</span>
+<span class="status-row">
+  <span class="status-item"><span class="marker">-></span> location: <span class="badge">remote</span></span>
+  <span class="status-item"><span class="marker">-></span> self-taught developer, pragmatic & result-oriented</span>
+</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="section">
+      <h2 class="section-title">
+        <span class="marker">-></span>ABOUT
+        <span class="badge">README</span>
+      </h2>
+      <div class="terminal-window">
+        <div class="terminal-header">
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <span style="margin-left: 8px;">profile.md</span>
+        </div>
+        <div class="terminal-body code-snippet">
+<span style="opacity: 0.7;"># whoami</span>
+Self-taught developer with a practical, results-driven approach. I enjoy understanding how systems work
+and driving projects to a working product. I pick up new technologies quickly and specialise in turning
+business requirements into reliable backend solutions.
+
+<span style="opacity: 0.7;"># focus</span>
+CRM integrations, business process automation, Telegram bots, AI/API integrations.
+
+<span style="opacity: 0.7;"># goals</span>
+International contracts, remote IT work, strong portfolio, backend & DevOps growth, global education.
+
+<span style="opacity: 0.7;"># services</span>
+Sites development | CRM setup & automation | Bugfixes | Deployment to VPS | Telegram bots
+        </div>
+      </div>
+    </section>
+
+    <!-- Stack -->
+    <section id="stack" class="section">
+      <h2 class="section-title">
+        <span class="marker">-></span>STACK
+        <span class="badge">dependencies</span>
+      </h2>
+      <div class="grid">
+        <div class="card">
+          <div class="card-title"><span class="marker">-></span> Backend</div>
+          <div class="card-desc">
+Python (FastAPI, SQLAlchemy, aiogram) · Node.js · Express · TypeScript · PHP
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="marker">-></span> Frontend</div>
+          <div class="card-desc">
+React · JavaScript · HTML · CSS · WordPress / Elementor
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="marker">-></span> Databases</div>
+          <div class="card-desc">
+PostgreSQL · SQLite · MongoDB
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="marker">-></span> DevOps</div>
+          <div class="card-desc">
+Docker · Docker Compose · GitHub Actions (CI/CD) · Nginx · Linux (Fedora) · VPS deployment
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="marker">-></span> CRM & Integrations</div>
+          <div class="card-desc">
+amoCRM · Bitrix24 · GoHighLevel · Pipedrive · REST API · Webhooks
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="marker">-></span> AI Tools</div>
+          <div class="card-desc">
+Codex · Claude · Cursor · Aider · LLM integration via API
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="marker">-></span> Other</div>
+          <div class="card-desc">
+Web scraping · Telegram channel monitoring · Android app prep (RuStore)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="section">
+      <h2 class="section-title">
+        <span class="marker">-></span>PROJECTS
+        <span class="badge">ls -la ./work</span>
+      </h2>
+      <div class="grid">
+        <div class="card">
+          <div class="card-title"><span class="marker">-></span> Kinomir</div>
+          <div class="card-desc">Web application · film & series catalog</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="marker">-></span> Daleron Market</div>
+          <div class="card-desc">Marketplace with CI/CD pipeline</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="marker">-></span> Telegram Quiz Bot</div>
+          <div class="card-desc">Quizzes · database · synonyms · admin panel</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="marker">-></span> Video Course Platform</div>
+          <div class="card-desc">Lesson access · PayPal payments</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="marker">-></span> Taxi Android Apps</div>
+          <div class="card-desc">Two taxi-service applications</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="marker">-></span> CRM Integrations</div>
+          <div class="card-desc">Automated lead processing & business logic</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="marker">-></span> WordPress Sites</div>
+          <div class="card-desc">Business websites on WordPress</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="marker">-></span> Freelance</div>
+          <div class="card-desc">Completed orders & reviews on Kwork, Fiverr, Upwork</div>
+        </div>
+      </div>
+      <div style="margin-top: 16px;">
+        <div class="card expandable" onclick="this.classList.toggle('open'); var content = this.querySelector('.expandable-content'); content.classList.toggle('open');">
+          <div class="card-title"><span class="marker">-></span> source_code</div>
+          <div class="expandable-content" style="display:none;">
+<span style="opacity: 0.8;">$ cd ~/repos</span>
+$ ls
+Kinomir · Daleron-Market · Telegram-Quiz-Bot · course-platform · taxi-apps · crm-automation · wordpress-sites · vibe-coffee · backendservice · tax-app-pre-production
+            <br><br>
+<span style="opacity: 0.8;">All source is available on <a href="https://github.com/DalerFayz" target="_blank" rel="noopener noreferrer">github.com/DalerFayz</a></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interests -->
+    <section class="section">
+      <h2 class="section-title">
+        <span class="marker">-></span>INTERESTS
+        <span class="badge">~/.hobbies</span>
+      </h2>
+      <div class="terminal-window">
+        <div class="terminal-header">
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <span style="margin-left: 8px;">hobbies.log</span>
+        </div>
+        <div class="terminal-body code-snippet">
+Minecraft (technical mods · Create · server administration) | Hollow Knight | 
+Jujutsu Kaisen | MMA & training | Electronic music | Linux & environment customisation
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="section">
+      <h2 class="section-title">
+        <span class="marker">-></span>CONTACT
+        <span class="badge">initiate_communication</span>
+      </h2>
+      <div class="terminal-window">
+        <div class="terminal-header">
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <span style="margin-left: 8px;">contact.json</span>
+        </div>
+        <div class="terminal-body code-snippet">
+{
+  "profile": "Dekonstruktion.kode",
+  "role": "Full-Stack / Backend Developer",
+  "languages": ["Russian", "Tajik", "English"],
+  "available_for": ["site_development", "crm_setup", "bugfixes", "deployment", "telegram_bots"],
+  "platforms": {
+    "github": "https://github.com/DalerFayz",
+    "kwork": "https://kwork.ru/user/Dekonstruktion",
+    "fiverr": "https://www.fiverr.com/dalerfayz",
+    "upwork": "https://www.upwork.com/freelancers/~dalerfayz"
+  },
+  "method": "self-taught · pragmatic · results-oriented"
+}
+        </div>
+      </div>
+      <div style="margin-top: 16px;">
+        <a href="https://github.com/DalerFayz" target="_blank" rel="noopener noreferrer" class="expandable" style="display:inline-block;" onclick="this.classList.toggle('open');">
+          <div class="card-title"><span class="marker">-></span>VISIT_REPOS</div>
+        </a>
+        <a href="mailto:hello@dekonstruktion.kode" class="expandable" style="display:inline-block;" onclick="this.classList.toggle('open');">
+          <div class="card-title"><span class="marker">-></span>EMAIL_ME</div>
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="terminal-window" style="margin-bottom: 0;">
+          <div class="terminal-body code-snippet" style="margin-bottom: 0;">
+<span style="opacity: 0.7;">$ last_command</span>
+Thank you for visiting. Let's build something great.
+            <br><br>
+<span style="opacity: 0.6;">© 2026 Dekonstruktion.kode. All systems operational. Powered by terminal aesthetics.</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Auto-collapse/expand handlers registered inline; keyboard support
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.expandable-content.open').forEach(el => {
+          el.classList.remove('open');
+          el.previousElementSibling.classList.remove('open');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
